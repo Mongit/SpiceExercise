@@ -80,5 +80,21 @@ namespace Spice.Areas.Admin.Controllers
             }
             return View(category);
         }
+
+        [HttpPost, ActionName("Delete")]//Tells .net core this is the submit action
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed (int? id)//change the name, because has the same signature (including parameters) than GET Delete action
+        {
+            Category category = await _db.Category.FindAsync(id);
+            if (category == null)
+            {
+                return View();
+            }
+            
+            _db.Category.Remove(category);
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
